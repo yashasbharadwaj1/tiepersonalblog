@@ -2,11 +2,10 @@
 {% block title %}sign-in{% endblock %}
 {% block content %}
 
-{% if request.user.is_authenticated %}
-<script>
-    window.location.href = '{% url "account:profile" %}';
-</script>
-{% endif %}
+<nav>
+  <a class="nav-link" href="{% url "blog:home" %}">Home <span class="sr-only">(current)</span></a>
+</nav>
+
 <style>
 
 .sep{

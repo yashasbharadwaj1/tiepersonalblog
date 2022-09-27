@@ -25,7 +25,7 @@ class Post(models.Model):
 
     category = models.ForeignKey(
         Category, on_delete=models.PROTECT, default=1)
-        
+       
     title = models.CharField(max_length=250)
     excerpt = models.TextField(null=True)
     slug = models.SlugField(max_length=250, unique_for_date='publish')
@@ -33,8 +33,8 @@ class Post(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='blog_posts')
     body = RichTextUploadingField(blank=False)
-    #favourites = models.ManyToManyField(
-     #   User, related_name='favourite', default=None, blank=True)
+    likes = models.ManyToManyField(User,related_name = 'like',blank=True,default = None)
+    likes_count = models.BigIntegerField(default = '0')
     status = models.CharField(max_length=10, choices=options, default='draft')
     newmanager = NewManager()  # custom manager
     objects = models.Manager()  # default manager

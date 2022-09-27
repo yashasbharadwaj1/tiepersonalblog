@@ -4,7 +4,31 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import login,authenticate
 from django.contrib.auth.models import User,auth
+
+from blog.models import Post
 from .models import Profile
+from django.http import JsonResponse
+
+
+@login_required
+def like(request):
+    if request.POST.get("action") == 'post':
+        result = ''
+        id = int(request.POST.get('postid'))
+        post = get_object_or_404(Post,id=id)
+        if post.likes.filter(id=request.user.id).exists():
+            post.likes.remove(request.user)
+            post.likes_count -=1
+            result = post.likes_count
+            post.save()
+        else:
+            post.likes.add(request.user)
+            post.likes_count +=1
+            result = post.likes_count
+            post.save()
+    return JsonResponse({'result':result})
+
+
 
 
 @login_required

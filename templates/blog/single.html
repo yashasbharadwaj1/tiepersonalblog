@@ -7,45 +7,109 @@
 
 {% include "base/nav-main.html" %}
 
-
+<style>
+  .centertitle {
+    display: flex;
+    justify-content: center;
+  }
+</style>
 
 <div class="container">
   <div class="row justify-content-md-center pt-5">
-    <div class="col-7"><h4>{{post.title}}</h4></div>
-    <div class="col-7"><p>{{post.publish}}</p></div>
-    <div class="col-7"><h5>{{post.excerpt|safe}}</h5></div>
-    <div class="col-7"><p>{{post.body|safe}}</p></div>
-    <div class="col-md-7">
+    <div class="centertitle">
+      <h4>{{post.title}}</h4>
+    </div>
+    <div class="col-7">
+      <p>{{post.publish}}</p>
+    </div>
+    <div>
+      {% if request.user.is_authenticated %}
+      <div class="col-7">
+        <span class="" id="like_count">{{post.likes_count}}</span>
+        <button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="like-button" value="{{post.id}}">
+          <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+              d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+          </svg>
+        </button>
+      </div>
 
-      {% with comments.count as total_comments %}
-      <h2>
-      {{ total_comments }} comment{{ total_comments|pluralize }}
-      </h2>
-      {% endwith %}
-      {% for comment in comments %}
+
+      {% else %}
+
+      <div class="col-7">
+        <span class="" id="like_count">{{post.likes_count}}</span>
+        <a href="{% url 'account:signup' %}" class="btn btn-link text-dark p-0 border-0 btn-outline-light"
+          value="{{post.id}}">
+          <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+              d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+          </svg>
+        </a>
+      </div>
+      {% endif %}
+
+      <div class="col-7">
+        <h5>{{post.excerpt|safe}}</h5>
+      </div>
+      <div class="col-7">
+        <p>{{post.body|safe}}</p>
+      </div>
+      <div class="col-md-7">
+
+
+
+        {% with comments.count as total_comments %}
+        <h2>
+          {{ total_comments }} comment{{ total_comments|pluralize }}
+        </h2>
+        {% endwith %}
+        {% for comment in comments %}
         Comment {{ forloop.counter }} by {{ comment.name }}
         on {{ comment.publish }}
         {{ comment.content|linebreaks }}
-      {% empty %}
+        {% empty %}
         <p>There are no comments for this post.</p>
-      {% endfor %}
+        {% endfor %}
         <h2>Make a new comment</h2>
 
-      <form id="myForm" method="post">
-      {{ comment_form.as_p }}
-      {% csrf_token %}
-      <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
-      </form>
+        <form id="myForm" method="post">
+          {{ comment_form.as_p }}
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+        </form>
 
+      </div>
+    </div>
   </div>
-</div>
-</div>
 
 
-<script>
-$('#myForm').trigger("reset");
-</script>
+  <script>
+    $('#myForm').trigger("reset");
 
-  </div>
+    $(document).on('click', '#like-button', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: '{% url "account:like" %}',
+        data: {
+          postid: $('#like-button').val(),
+          csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+          action: 'post'
+        },
+        success: function (json) {
+          document.getElementById("like_count").innerHTML = json['result']
+        },
+        error: function (xhr, errmsg, err) {
+
+        }
+      });
+    })
+
+  </script>
+
 </div>
+
 {% endblock %}
