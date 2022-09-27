@@ -23,6 +23,10 @@
       <p>{{post.publish}}</p>
     </div>
     <div>
+      {% load social_share %}
+      
+      {% post_to_facebook object_or_url "<p style='color: green;'>Post to facebook</p>" %}
+      {% post_to_twitter  object_or_url "<p style='color: green;'>Post to Twitter</p>" %}
       {% if request.user.is_authenticated %}
       <div class="col-7">
         <span class="" id="like_count">{{post.likes_count}}</span>
