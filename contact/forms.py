@@ -18,7 +18,7 @@ class ContactForm(forms.Form):
         msg+=f' \n having \n{subject} \n '
         msg+=cleaned_data.get('message')
 
-        return subject,msg,from_email
+        return subject,msg
 
     def send(self):
         subject,msg = self.get_info()
