@@ -7,22 +7,16 @@
 
 {% include "base/nav-main.html" %}
 
-<style>
-  .centertitle {
-    display: flex;
-    justify-content: center;
-  }
-</style>
 
 <div class="container">
   <div class="row justify-content-md-center pt-5">
-    <div class="centertitle">
-      <h4>{{post.title}}</h4>
+    <div class='col-7'>
+      <h6>{{post.title}}</h6>
     </div>
     <div class="col-7">
       <p>{{post.publish}}</p>
     </div>
-    <div>
+    <div class="col-7">
       {% load social_share %}
       
       {% post_to_facebook object_or_url "<p style='color: green;'>Post to facebook</p>" %}
