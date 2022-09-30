@@ -1,5 +1,7 @@
 from django import forms 
-from django.conf import settings 
+import os
+from dotenv import load_dotenv
+load_dotenv() 
 from django.core.mail import send_mail
 class ContactForm(forms.Form):
     name = forms.CharField(max_length=35, required=True)
@@ -25,7 +27,7 @@ class ContactForm(forms.Form):
         send_mail(
            subject=subject,
            message = msg,
-           from_email=settings.EMAIL_HOST_USER,
-           recipient_list=[settings.RECIPIENT_ADDRESS]
+           from_email=str(os.getenv('EMAIL_HOST_USER')),
+           recipient_list=[str(os.getenv('RECIPIENT_ADDRESS'))]
         )
     
