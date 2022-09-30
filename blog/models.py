@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from ckeditor_uploader.fields import RichTextUploadingField
 
+
+
+
+
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -25,6 +29,8 @@ class Post(models.Model):
 
     category = models.ForeignKey(
         Category, on_delete=models.PROTECT, default=1)
+    image = models.ImageField(
+        upload_to ='posts',default='posts/default.jpg')
        
     title = models.CharField(max_length=250)
     excerpt = models.TextField(null=True)

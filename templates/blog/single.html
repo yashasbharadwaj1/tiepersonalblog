@@ -16,6 +16,7 @@
     <div class="col-7">
       <p>{{post.publish}}</p>
     </div>
+   
     <div class="col-7">
       {% load social_share %}
       
@@ -48,10 +49,10 @@
         </a>
       </div>
       {% endif %}
-
+      <div class="col-md-9"><img class="card-img-top" src="{{post.image.url}}" alt="{{ post.title }}"></div>
       <div class="col-7">
         <h5>{{post.excerpt|safe}}</h5>
-      </div>
+      </div> 
       <div class="col-7">
         <p>{{post.body|safe}}</p>
       </div>

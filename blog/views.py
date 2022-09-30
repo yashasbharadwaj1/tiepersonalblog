@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404,HttpResponseRedirect
 from .models import Post,Category
-from .forms import NewCommentForm
+from .forms import NewCommentForm,Postsearchform
+from django.db.models import Q
 # Create your views here.
 def home(request):
     all_posts = Post.newmanager.all()
@@ -29,5 +30,19 @@ def post_single(request, post):
     
 
 def search(request):
-    return render(request,'blog/search.html')
+    form = Postsearchform()
+    c = ''
+    results = []
+    query = Q()
+    if "c" in request.GET:
+        form = Postsearchform(request.GET)
+        form.full_clean()
+        if form.is_valid():
+            c = form.cleaned_data['c']
+            if c is not None:
+                query &= Q(category=c)
+        results = Post.objects.filter(query)
+        print(results)
+
+    return render(request,'blog/search.html',{'c':c,'form':form,'results':results})
 
