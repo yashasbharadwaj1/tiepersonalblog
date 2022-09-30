@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import environ
+import django_heroku
 
 env = environ.Env()
 environ.Env.read_env()
@@ -170,3 +171,4 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 RECIPIENT_ADDRESS = env('RECIPIENT_ADDRESS')
+django_heroku.settings(locals())
